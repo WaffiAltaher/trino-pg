@@ -50,6 +50,9 @@ You can use the provided pgAdmin instance or any other DB client of your choice.
 Run population.sql on pg1 and gas.sql on pg2.
 
 ## Superset 
+> **_Note_**
+You don't really need superset for this, any db client will suffice. Superset is more than just a DB client
+
 This repo contains superset-data/superset.db for convenience. This will ensure that superset is ready for us. 
 The steps under superset setup are only needed if you did not mount the superset-data volume. 
 
