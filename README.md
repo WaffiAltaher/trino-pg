@@ -6,6 +6,37 @@ Complete stack is runnable locally using docker compose.
 Based on https://github.com/sairamkrish/trino-superset-demo
 
 ## Setup
+## Trino 
+### TLS Setup
+To be able to use Trino's authorization features, TLS must be setup. Trino wont even accept basic username/password auth without first using TLS.
+> **_NOTE_**   
+This project is using a self signed certificate, which obviously is not good enough for production usage. 
+
+To create a self signed certificate:
+```shell
+openssl genrsa -out key.pem 2048
+
+openssl req -new -key key.pem -out csr.pem 
+
+openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
+
+cat key.pem cert.pem > combinedcert.pem
+```
+Now copy the generated combinedcert to trino/coordinator/etc
+
+### users setup
+``` shell 
+cd trino/coordinator/etc/ 
+
+touch password.db
+
+htpasswd -B -C 10 password.db test1
+
+htpasswd -B -C 10 password.db test2
+```
+the htpasswd command will prompt you for password, enter passwords for test1 and test2 users. 
+
+
 
 
 ### Startup
@@ -28,37 +59,6 @@ superset db upgrade
 
 superset init
 ```
-## Trino 
-### TLS Setup
-To be able to use Trino's authorization features, TLS must be setup. Trino wont even accept basic username/password auth without first using TLS.
-> **_NOTE_**   
-This project is using a self signed certificate, which obviously is not good enough for production usage. 
-
-To create a self signed certificate:
-```shell
-openssl genrsa -out key.pem 2048
-
-openssl req -new -key key.pem -out csr.pem 
-
-openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
-
-cat key.pem cert.pem > combinedcert.pem
-```
-Now copy the generated cert to trino/coordinator/etc
-
-### users setup
-``` shell 
-cd trino/coordinator/etc/ 
-
-touch password.db
-
-htpasswd -B -C 10 password.db test1
-
-htpasswd -B -C 10 password.db test2
-```
-the htpasswd command will prompt you for password, enter passwords for test1 and test2 users. 
-
-
 ## Superset Connection
 Connect to [Superset](http://localhost:8088/) from your browser (username: `admin`, password: `admin`).
 
