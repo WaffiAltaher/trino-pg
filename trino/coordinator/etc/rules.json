@@ -1,0 +1,56 @@
+{
+    "catalogs": [
+        {
+            "catalog" : "system",
+            "allow": "read-only"
+          },    
+        {
+        "catalog": ".*",
+        "allow": "all"
+      }
+    ],
+    "tables": [
+        {
+          "user": "banned_user",
+          "privileges": []
+        },
+        {
+            "user":"test1",
+            "privileges":["SELECT"]
+        },
+        {
+          "schema": "gas",
+          "user" : "test2",
+          "table": "gas_per_country",
+          "privileges": ["SELECT"],
+          "filter": "Status != 'E'"
+        },
+        {
+          "schema": "population",
+          "user" : "test2",
+          "table": "country_population",
+          "privileges": ["SELECT"]
+        }, 
+        {
+          "catalog": "default",
+          "schema": "default",
+          "table": ".*",
+          "privileges": ["SELECT"],
+          "columns" : [
+             {
+                "name": "address",
+                "allow": false
+             },
+             {
+                "name": "SSN",
+                "mask": "'XXX-XX-' + substring(credit_card, -4)",
+                "mask_environment": {
+                  "user": "system_user"
+                }
+             }
+          ]
+        }
+      ]
+    
+       
+}

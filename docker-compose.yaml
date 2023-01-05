@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  pg1:
+    hostname: pg1
+    image: postgres
+    container_name: pg1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pg1
+    ports:
+      - 5431:5432
+  pg2:
+    hostname: pg2
+    image: postgres
+    container_name: pg2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pg2
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 8080:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: waffi@ittopia.nl 
+      PGADMIN_DEFAULT_PASSWORD: waffi
+
+  trino-coordinator:
+    image: "trinodb/trino:367"
+    container_name: trino
+    ports:
+      - '8081:8080'
+      - '8443:8443'
+    volumes:
+      - ./trino/coordinator/etc:/etc/trino
+      - ./trino/coordinator/etc/catalog:/etc/trino/catalog
+
+  superset:
+    build: ./superset
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./superset-data/certs:/certs
+      - ./superset-data:/app/superset_home
+      - ./superset-data/pythonpath:/app/pythonpath
+      
+
+ 
